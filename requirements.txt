@@ -1,0 +1,8 @@
+streamlit==1.0.0
+streamlit-aggrid==0.3.4.post3
+streamlit-option-menu==0.3.2
+Pillow==8.4.0
+streamlit-aggrid==0.3.4.post3
+raceplotly==0.1.7
+plotly==5.14.1
+geopandas==0.12.2

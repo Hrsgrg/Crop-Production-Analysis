@@ -22,7 +22,7 @@ with st.sidebar:
                          }
                          )
 
-logo = Image.open('logo.png')
+logo = Image.open('logo.jpg')
 
 # About Page
 if choose == "About":

@@ -118,7 +118,7 @@ elif choose == 'Task2':
     df.rename(columns={'District ': 'District', 'Area ': 'Area'}, inplace=True)
 
     df.dropna(subset=['Production'], inplace=True)
-    df is drop(["Season", "Yield", "State", "District", "Area"], axis=1)
+    df.drop(["Season", "Yield", "State", "District", "Area"], axis=1)
     df_new = df.groupby(['Crop', 'Crop_Year'])['Production'].sum().reset_index()
     crops_list = df_new['Crop'].unique()
 

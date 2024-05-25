@@ -54,7 +54,7 @@ if choose == "About":
         video_bytes = video_file.read()
         st.video(video_bytes)
 
-    st.write("## Team Members (Group 2)")
+    st.write("## Team Members:-")
     st.write("- Harsh Garg:smirk:")
     st.write("- Adamya Agarwal:unamused:")
    

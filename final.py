@@ -48,7 +48,7 @@ if choose == "About":
     st.write("-**Task 3:** To correlate rainfall pattern with crop production trends")
 
     st.markdown('<p class="font">Other Crop Production Insights</p>', unsafe_allow_html=True)
-    videos = ['videos_racin/spices_video.mp4', 'videos_racin/nuts_seeds_video.mp4', 'videos_racin/vegetable_fruits_video.mp4']
+    videos = ['videos/vid2.mp4', 'videos/vid1.mp4', 'videos/vid3.mp4']
     for video in videos:
         video_file = open(video, 'rb')
         video_bytes = video_file.read()

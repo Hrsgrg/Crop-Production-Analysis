@@ -108,6 +108,7 @@ elif choose == 'Task1':
             st.plotly_chart(fig, use_container_width=True)
 
 # Task 2: Crop Production Trends
+# Task 2: Crop Production Trends
 elif choose == 'Task2':
     st.markdown(""" <style> .font {
         font-size:45px ; font-family: 'Comic Sans'; color: #cca300} 
@@ -118,7 +119,7 @@ elif choose == 'Task2':
     df.rename(columns={'District ': 'District', 'Area ': 'Area'}, inplace=True)
 
     df.dropna(subset=['Production'], inplace=True)
-    df.drop(["Season", "Yield", "State", "District", "Area"], axis=1)
+    df = df.drop(["Season", "Yield", "State", "District", "Area"], axis=1)
     df_new = df.groupby(['Crop', 'Crop_Year'])['Production'].sum().reset_index()
     crops_list = df_new['Crop'].unique()
 
@@ -138,35 +139,27 @@ elif choose == 'Task2':
             st.markdown('<p style="font-family:sans-serif; color:red; font-size: 15px;">***Customize your plot***</p>', unsafe_allow_html=True)
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                dropdown1 = st.selectbox('Crop1:', crops_list)
+                dropdown1 = st.selectbox('Crop1:', crops_list, index=0, help='Choose the first crop for custom comparison')
             with col2:
-                dropdown2 = st.selectbox('Crop2:', crops_list)
+                dropdown2 = st.selectbox('Crop2:', crops_list, index=0, help='Choose the second crop for custom comparison')
             with col3:
-                dropdown3 = st.selectbox('Crop3:', crops_list)
-            col4, col5, col6 = st.columns([1, 1, 1])
+                dropdown3 = st.selectbox('Crop3:', crops_list, index=0, help='Choose the third crop for custom comparison')
+            col4, col5 = st.columns([1, 1])
             with col4:
-                dropdown4 = st.selectbox('Crop4:', crops_list)
+                dropdown4 = st.selectbox('Crop4:', crops_list, index=0, help='Choose the fourth crop for custom comparison')
             with col5:
-                dropdown5 = st.selectbox('Crop5:', crops_list)
-            with col6:
-                dropdown6 = st.selectbox('Crop6:', crops_list)
-            submitted_custom = st.form_submit_button('Submit')
-
-    if master_dropdown != 'customize' or submitted_custom:
-        st.write("----")
-        if master_dropdown == 'customize':
-            crops = [dropdown1, dropdown2, dropdown3, dropdown4, dropdown5, dropdown6]
-            crops = [crop for crop in crops if crop != '-']
+                dropdown5 = st.selectbox('Crop5:', crops_list, index=0, help='Choose the fifth crop for custom comparison')
+            submitted_crops = st.form_submit_button('Submit')
+            if submitted_crops:
+                selected_crops = [dropdown1, dropdown2, dropdown3, dropdown4, dropdown5]
+                df_selected = df_new[df_new['Crop'].isin(selected_crops)]
+                fig = barplot(df_selected, item='Crop', value='Production', time='Crop_Year')
+                st.plotly_chart(fig)
         else:
-            crops = eval(master_dropdown)
-
-        if len(crops) == 0:
-            st.warning("You must select at least one crop.")
-        else:
-            df_new = df_new[df_new['Crop'].isin(crops)]
-            fig = barplot(df_new, item_column='Crop', value_column='Production', time_column='Crop_Year')
-            fig.show()
-            st.plotly_chart(fig, use_container_width=True)
+            selected_crops = locals()[master_dropdown]
+            df_selected = df_new[df_new['Crop'].isin(selected_crops)]
+            fig = barplot(df_selected, item='Crop', value='Production', time='Crop_Year')
+            st.plotly_chart(fig)
 
 # Additional Tasks (e.g., Task3) can be added here
 

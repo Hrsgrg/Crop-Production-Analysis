@@ -108,58 +108,113 @@ elif choose == 'Task1':
             st.plotly_chart(fig, use_container_width=True)
 
 # Task 2: Crop Production Trends
-# Task 2: Crop Production Trends
-elif choose == 'Task2':
+elif choose=='Task2':
     st.markdown(""" <style> .font {
         font-size:45px ; font-family: 'Comic Sans'; color: #cca300} 
-        </style> """, unsafe_allow_html=True)
-
-    df = pd.read_csv('APY.csv')
-    st.markdown('<p class="font">National Annual Crop Production</p>', unsafe_allow_html=True)
-    df.rename(columns={'District ': 'District', 'Area ': 'Area'}, inplace=True)
-
-    df.dropna(subset=['Production'], inplace=True)
-    df = df.drop(["Season", "Yield", "State", "District", "Area"], axis=1)
-    df_new = df.groupby(['Crop', 'Crop_Year'])['Production'].sum().reset_index()
-    crops_list = df_new['Crop'].unique()
-
-    cereals = ['Maize', 'Rice', 'Wheat', 'Other Cereals', 'Barley', 'Jowar', 'Ragi', 'Small millets', 'Bajra']
-    pulses = ['Arhar/Tur', 'Cowpea(Lobia)', 'Moong(Green Gram)', 'Urad', 'Gram', 'Horse-gram', 'Masoor', 'Other Rabi pulses', 'Peas & beans (Pulses)', 'Other Summer Pulses', 'Other Kharif pulses', 'Peas & beans (Pulses)', 'Khesari', 'Moth']
-    nuts_seeds = ['Arecanut', 'Cashewnut', 'Oilseeds total', 'other oilseeds', 'Sunflower', 'Castor seed', 'Linseed', 'Niger seed', 'Safflower']
-    spices = ['Black pepper', 'Dry chillies', 'Ginger', 'Rapeseed & Mustard', 'Sesamum', 'Turmeric', 'Coriander', 'Garlic', 'Cardamom']
-    vegetables_fruits = ['Banana', 'Sweet potato', 'Tapioca', 'Guar seed', 'Onion', 'Potato', 'Soyabean']
-    cash_crops = ['Sugarcane', 'Cotton(lint)', 'Groundnut', 'Jute', 'Tobacco']
-
+        </style> """, unsafe_allow_html=True) 
+    df=pd.read_csv('APY.csv') 
+    st.markdown('<p class="font">National Annual Crop Production</p>', unsafe_allow_html=True)  
+    # st.write('---')
+    # st.markdown('<p class="font">Set Parameters...</p>', unsafe_allow_html=True)
+    column_list=list(df)
+    column_list = deque(column_list)
+    column_list.appendleft('-')
+    df.rename(columns = {'District ':'District'}, inplace = True)
+    df.rename(columns = {'Area ':'Area'}, inplace = True)
+    drop_values=[]
+    for i in df.index:
+        if(math.isnan(df.loc[i,'Production'])):
+            drop_values.append(i)
+    df=df.drop(drop_values, axis=0)
+    df = df.drop(["Season","Yield","State","District","Area"], axis=1)
+    df_new=df.groupby(['Crop','Crop_Year'])['Production'].sum().reset_index()
+    crops_list=df_new['Crop'].unique()
+    cereals=['Maize','Rice','Wheat','Other Cereals','Barley','Jowar','Ragi','Small millets','Bajra']
+    pulses=['Arhar/Tur','Cowpea(Lobia)','Moong(Green Gram)','Urad','Gram','Horse-gram','Masoor','Other  Rabi pulses','Peas & beans (Pulses)','Other Summer Pulses','Other Kharif pulses','Peas & beans (Pulses)','Khesari','Moth']
+    nuts_seeds=['Arecanut','Cashewnut','Oilseeds total','other oilseeds', 'Sunflower', 'Castor seed','Linseed','Niger seed','Safflower' ]
+    spices=['Black pepper','Dry chillies','Ginger','Rapeseed &Mustard','Sesamum','Turmeric', 'Coriander','Garlic','Cardamom']
+    vegetables_fruits=['Banana','Sweet potato', 'Tapioca','Guar seed', 'Onion','Potato','Soyabean']
+    cash_crops=[ 'Sugarcane','Cotton(lint)','Groundnut', 'Jute', 'Tobacco']
     with st.form(key='columns_in_form'):
-        st.markdown('<p style="font-family:sans-serif; color:red; font-size: 15px;">***These input fields are required***</p>', unsafe_allow_html=True)
-        col0, col01 = st.columns([1, 1])
+        text_style = '<p style="font-family:sans-serif; color:red; font-size: 15px;">***These input fields are required***</p>'
+        st.markdown(text_style, unsafe_allow_html=True)
+        col0, col01 = st.columns([1,1])
         with col0:
-            master_dropdown = st.selectbox('Type of bar plot', ['cereals', 'pulses', 'nuts_seeds', 'spices', 'vegetables_fruits', 'cash_crops', 'customize'], index=0, help='Choose the type of racing bar plot desired, e.g., cereals, pulses, etc.')
-        if master_dropdown == 'customize':
-            st.markdown('<p style="font-family:sans-serif; color:red; font-size: 15px;">***Customize your plot***</p>', unsafe_allow_html=True)
-            col1, col2, col3 = st.columns([1, 1, 1])
+            master_dropdown=st.selectbox('Type of bar plot',['cereals', 'pulses', 'nuts_seeds', 'spices', 'vegetables_fruits','cash_crops', 'customize'], index=0, help='Choose the type of racing bar plot desired, e.g., cereals, pulses, etc.')
+        if(master_dropdown=='customize'):
+            st.markdown(text_style, unsafe_allow_html=True)
+            col1, col2, col3 = st.columns( [1, 1, 1])
             with col1:
-                dropdown1 = st.selectbox('Crop1:', crops_list, index=0, help='Choose the first crop for custom comparison')
-            with col2:
-                dropdown2 = st.selectbox('Crop2:', crops_list, index=0, help='Choose the second crop for custom comparison')
-            with col3:
-                dropdown3 = st.selectbox('Crop3:', crops_list, index=0, help='Choose the third crop for custom comparison')
-            col4, col5 = st.columns([1, 1])
+                dropdown1=st.selectbox('Crop1:',crops_list, index=0, help='Choose the first crop for custom comparison') 
+            with col2:    
+                dropdown2=st.selectbox('Crop2:',crops_list, index=0, help='Choose the second crop for custom comparison') 
+            with col3:    
+                dropdown3=st.selectbox('Crop3:',crops_list, index=0, help='Choose the third crop for custom comparison')
+            st.markdown(text_style, unsafe_allow_html=True)
+            col4, col5 = st.columns( [1, 1])
             with col4:
-                dropdown4 = st.selectbox('Crop4:', crops_list, index=0, help='Choose the fourth crop for custom comparison')
-            with col5:
-                dropdown5 = st.selectbox('Crop5:', crops_list, index=0, help='Choose the fifth crop for custom comparison')
-            submitted_crops = st.form_submit_button('Submit')
-            if submitted_crops:
-                selected_crops = [dropdown1, dropdown2, dropdown3, dropdown4, dropdown5]
-                df_selected = df_new[df_new['Crop'].isin(selected_crops)]
-                fig = barplot(df_selected, item='Crop', value='Production', time='Crop_Year')
-                st.plotly_chart(fig)
-        else:
-            selected_crops = locals()[master_dropdown]
-            df_selected = df_new[df_new['Crop'].isin(selected_crops)]
-            fig = barplot(df_selected, item='Crop', value='Production', time='Crop_Year')
-            st.plotly_chart(fig)
+                dropdown4=st.selectbox('Crop4:',crops_list, index=0, help='Choose the fourth crop for custom comparison') 
+            with col5:    
+                dropdown5=st.selectbox('Crop5:',crops_list, index=0, help='Choose the fifth crop for custom comparison') 
+        text_style = '<p style="font-family:sans-serif; color:blue; font-size: 15px;">***Customize and fine-tune your plot (optional)***</p>'
+        st.markdown(text_style, unsafe_allow_html=True)
+        chart_title = "Racing Bar comparison"
+        col10, col11, col12 = st.columns( [1, 1, 1])
+        with col10:
+            speed=st.slider('Animation Speed',10,500,100, step=10, help='Adjust the speed of animation')
+            frame_duration=500-speed  
+        with col11:
+            chart_width=st.slider('Chart Width',500,1000,500, step=20, help='Adjust the width of the chart')
+        with col12:    
+            chart_height=st.slider('Chart Height',500,1000,600, step=20, help='Adjust the height of the chart')
+        submitted = st.form_submit_button('Submit')
+    st.write('---')
+    if submitted:        
+        if master_dropdown=='-' or (master_dropdown=='customize' and (dropdown1=='-' or dropdown2=='-' or dropdown3=='-' or dropdown4=='-' or dropdown5=='-')):
+            st.warning("You must complete the required fields")
+        else: 
+            if (master_dropdown=='cereals'):
+                newdf = df_new[df_new['Crop'].isin(cereals)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crop', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='pulses'):
+                newdf = df_new[df_new['Crop'].isin(pulses)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='nuts_seeds'):
+                newdf = df_new[df_new['Crop'].isin(nuts_seeds)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='spices'):
+                newdf = df_new[df_new['Crop'].isin(spices)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='vegetables_fruits'):
+                newdf = df_new[df_new['Crop'].isin(vegetables_fruits)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='cash_crops'):
+                newdf = df_new[df_new['Crop'].isin(cash_crops)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year')
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            elif (master_dropdown=='customize'):
+                customize_list=[]
+                customize_list.append(dropdown1)
+                customize_list.append(dropdown2)
+                customize_list.append(dropdown3)
+                customize_list.append(dropdown4)
+                customize_list.append(dropdown5)
+                newdf=df_new[df_new['Crop'].isin(customize_list)]
+                my_raceplot = barplot(newdf,  item_column='Crop', value_column='Production', time_column='Crop_Year', top_entries=6)
+                fig=my_raceplot.plot(item_label = 'Crops', value_label = 'Production', frame_duration = 600)
+            fig.update_layout(
+            title=chart_title,
+            autosize=False,
+            width=chart_width,
+            height=chart_height,
+            paper_bgcolor="lightgray",
+            )
+            st.plotly_chart(fig, use_container_width=True)
 
 # Additional Tasks (e.g., Task3) can be added here
 

@@ -54,12 +54,10 @@ if choose == "About":
         video_bytes = video_file.read()
         st.video(video_bytes)
 
-    st.write("## Team Members (Group 8)")
-    st.write("- Arya Pinaki :smirk:")
-    st.write("- Bhavya Garg :unamused:")
-    st.write("- Gauri G Menon :penguin:")
-    st.write("- Kaushik Raj Nadar :confused:")
-    st.write("- S Pradeep :sunglasses:")
+    st.write("## Team Members (Group 2)")
+    st.write("- Harsh Garg:smirk:")
+    st.write("- Adamya Agarwal:unamused:")
+   
 
 # Task 1: Crop Production Map
 elif choose == 'Task1':
